@@ -1,2 +1,3 @@
 Hello Jugal Sharma you are great learner, will this really help you??
+This is the change from the another developer Jugal who cloned the remote repository and now want check in the same file in master at remote.
 
