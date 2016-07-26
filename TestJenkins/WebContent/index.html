@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang='en-GB'>
+<head>
+  <meta charset='utf-8'>
+  <title>Ractive test</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+</head>
+
+<body>
+  <h1>Ractive test</h1>
+
+  <!--
+       1. This is the element we'll render our Ractive to.
+  -->
+  <div id='container'></div>
+
+  <!--
+       2. You can load a template in many ways. For convenience, we'll include it in
+       a script tag so that we don't need to mess around with AJAX or multiline strings.
+       Note that we've set the type attribute to 'text/ractive' - though it can be
+       just about anything except 'text/javascript'
+  -->
+  <script id='template' type='text/ractive'>
+    <p>Hello, {{name}}!</p>
+  </script>
+
+  <!--
+       3. You can always get the most recent stable version from the URL below.
+       If you want the newest features (unstable!), use the 'edge' version instead:
+
+           http://cdn.ractivejs.org/edge/ractive.min.js
+		   1851632
+		   APIKEY:- e84d50971c44059e9305d05093820fb8
+		   api.openweathermap.org/data/2.5/forecast?id=524901
+		   
+		   $.getJSON("api.openweathermap.org/data/2.5/forecast/daily?callback=?&id=2643741&units=metric&cnt=14&appid=e84d50971c44059e9305d05093820fb8", showForecastDaily).error(errorHandler);
+		   api.openweathermap.org/data/2.5/forecas?id=524901&appid=e84d50971c44059e9305d05093820fb8
+		   
+		   http://api.openweathermap.org/data/2.5/forecast?callback=?&id=524901&appid=e84d50971c44059e9305d05093820fb8
+		   
+		   api.openweathermap.org/data/2.5/weather?q=London,uk&callback=test
+
+       If you need IE8 support, change 'ractive' to 'ractive-legacy'.
+  -->
+  <script src='http://cdn.ractivejs.org/latest/ractive.min.js'></script>
+
+  <!--
+       4. We've got an element in the DOM, we've created a template, and we've
+       loaded the library - now it's time to build our Hello World app.
+  -->
+  <script>
+  var time_zone = 1000 * (new Date().getTimezoneOffset())*(-60);
+  
+   var dataFromApi =jQuery.getJSON( "http://api.openweathermap.org/data/2.5/forecast?callback=?&id=524901&appid=e84d50971c44059e9305d05093820fb8", ParseJson);
+ // var dataFromApi = 'data'+'http://api.openweathermap.org/data/2.5/forecast?callback=?&id=524901&appid=e84d50971c44059e9305d05093820fb8';
+    var ractive = new Ractive({
+      // The `el` option can be a node, an ID, or a CSS selector.
+      el: '#container',
+
+      // We could pass in a string, but for the sake of convenience
+      // we're passing the ID of the <script> tag above.
+      template: '#template',
+
+      // Here, we're passing in some initial data
+     // data: { name: http://api.openweathermap.org/data/2.5/forecast?callback=?&id=524901&appid=e84d50971c44059e9305d05093820fb8 }
+	   data: { name: dataFromApi }
+    });
+	
+function ParseJson(JSONtext)
+{
+console.log(JSONtext);
+	try{
+		JSONobject = JSON.parse(JSONtext); 
+		alert("JSONobject :"+JSONobject);
+	}catch(e){
+		ShowAlertMess('Error JSON');
+		return;
+	}
+
+	if(JSONobject.cod != '200') {
+		ShowAlertMess('Error '+ JSONobject.cod + ' ('+ JSONobject.message +')');
+		return;
+	}
+	var mes = JSONobject.cod;
+	if(JSONobject.calctime)
+		mes = mes + ' ' + JSONobject.calctime;
+	if(JSONobject.message)
+		mes = mes + ' ' + JSONobject.message;
+	console.log( mes );
+	return JSONobject;
+}
+  </script>
+  
+  
+  <script type="text/javascript">
+ 
+  
+var time_zone = 1000 * (new Date().getTimezoneOffset())*(-60);
+
+
+
+var forecast = [];
+var daily = [];
+
+jQuery(document).ready(function() {
+
+	expires = new Date();
+	expires.setTime(expires.getTime() + (1000 * 3600 * 24 * 365));
+	
+
+
+
+	$.getJSON("http://api.openweathermap.org/data/2.5/forecast?callback=?&id=524901&appid=e84d50971c44059e9305d05093820fb8", showForecast).error(errorHandler);
+	// $.getJSON("/data/2.5/forecast/daily?callback=?&id=2643741&units=metric&cnt=14&appid=b1b15e88fa797225412429c1c50c122a", showForecastDaily).error(errorHandler);
+	})
+
+function showForecast(d)
+{
+    if( ! d.list) {
+        console.log(d);
+    }
+	forecast = d.list;
+	//showForecastSmall();
+	//showHourlyForecastChart();
+	//showForcastHourlyListLong();
+	//showForcastChartVal('temp');
+}
+
+function  errorHandler(e)
+{
+    console.log(e);
+	ShowAlertMess(e.status +' '+e.statusText);
+}
+function ShowAlertMess(mess)
+{
+    console.log(mess);
+	//var html = '<div class="alert alert-error" ><a class="close" data-dismiss="alert" href="#">×</a>'+mess+'</div>';
+	//document.getElementById("alert_body").innerHTML = html;
+}
+  </script>
+</body>
+</html>
