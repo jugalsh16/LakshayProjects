@@ -1,0 +1,10 @@
+<project>
+  ...
+  <packaging>pom</packaging>
+  ...
+  <modules>
+    <module>TestJenkins</module> <!-- module is in a subdirectory of this project -->
+     <!--  <module>../bar</module>module is a sibling to this project -->
+    <!-- <module>../../../other-projects/baz</module>  somewhere else entirely -->
+  </modules>
+</project>
